@@ -1,0 +1,131 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Steinkauz",
+    "description": "Simple json file to use the SendGrid API to send an email from a CustomGPT",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://api.sendgrid.com/v3/mail/"
+    }
+  ],
+  "paths": {
+    "/send": {
+      "post": {
+        "summary": "Send an Email",
+        "operationId": "sendEmail",
+        "description": "Send an email to an arbitrary email address with a specified subject and message.",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "personalizations": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "to",
+                        "subject"
+                      ],
+                      "properties": {
+                        "to": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "required": [
+                              "email"
+                            ],
+                            "properties": {
+                              "email": {
+                                "type": "string",
+                                "format": "email"
+                              }
+                            }
+                          }
+                        },
+                        "subject": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "content": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "type",
+                        "value"
+                      ],
+                      "properties": {
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "text/plain",
+                            "text/html"
+                          ]
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "from": {
+                    "type": "object",
+                    "required": [
+                      "email"
+                    ],
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "from@example.com"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Sender Name"
+                      }
+                    }
+                  },
+                  "reply_to": {
+                    "type": "object",
+                    "properties": {
+                      "email": {
+                        "type": "string",
+                        "format": "email",
+                        "example": "replyto@example.com"
+                      },
+                      "name": {
+                        "type": "string",
+                        "example": "Reply To Name"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Email sent successfully"
+          },
+          "400": {
+            "description": "Bad request"
+          },
+          "404": {
+            "description": "Resource not found"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}
